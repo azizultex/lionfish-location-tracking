@@ -36,12 +36,6 @@ function lionfish_required_plugins() {
 			'slug'             => 'piklist',
 			'required'         => true,
 			'force_activation' => true,
-		),
-		array(
-			'name'             => 'WordPress REST API (Version 2)',
-			'slug'             => 'rest-api',
-			'required'         => true,
-			'force_activation' => true,
 		)
 	);
     

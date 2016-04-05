@@ -43,6 +43,16 @@ function lionfish_location_scripts() {
             $long               = get_post_meta( get_the_ID(), 'long', true );
             $lionfish_number    = get_post_meta( get_the_ID(), 'lionfish_number', true );
             $date               = get_post_meta( get_the_ID(), 'date', true );
+            // tax
+            $terms              = get_the_terms( get_the_ID(), 'lionfish_layers');
+
+            if ( $terms && ! is_wp_error( $terms ) ) {
+                $terms_ids = array();
+                foreach ( $terms as $term ) {
+                    $terms_ids[] = $term->term_id;
+                }
+            }
+
 
             $single_data = array();
             $single_data['location'] = $location;
@@ -50,6 +60,7 @@ function lionfish_location_scripts() {
             $single_data['long'] = $long;
             $single_data['lionfish_number'] = $lionfish_number;
             $single_data['date'] = $date;
+            $single_data['layers'] = $terms_ids;
 
             $post_data[] = $single_data;
 
@@ -59,10 +70,11 @@ function lionfish_location_scripts() {
     wp_reset_postdata();
 
     /* ajaxify the post submit */
+    wp_enqueue_style('jquerymodal', LIONFISH_PLUGINURL . 'assets/css/jquery.modal.css');
     wp_enqueue_style('lionfish_style', LIONFISH_PLUGINURL . 'assets/css/lionfish_styles.css');
+    wp_enqueue_script('jquerymodal', LIONFISH_PLUGINURL . 'assets/js/jquery.modal.js', array('jquery') );
     wp_enqueue_script('gmap_api', 'https://maps.googleapis.com/maps/api/js', array('jquery') );
     wp_enqueue_script('gmap_cluster', LIONFISH_PLUGINURL . 'assets/js/gmap/markerclusterer.js', array('jquery') );
-    wp_enqueue_script('gmap_json', LIONFISH_PLUGINURL . 'assets/js/gmap/data.json', array('jquery') );
     wp_enqueue_script('gmap_setting', LIONFISH_PLUGINURL . 'assets/js/gmap/setting.js', array('jquery') );
     wp_localize_script( 'gmap_setting', 'lionfish_locations', $post_data );
     wp_enqueue_script('ajax_js', LIONFISH_PLUGINURL . 'assets/js/ajax-post-submit.js', array('jquery') );

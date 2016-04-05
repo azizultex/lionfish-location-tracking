@@ -24,6 +24,7 @@ jQuery(document).ready(function($) {
                  $('.lionfish p.status').text(res);
                  if( res == 'Location submitted successfully!' ) {
                      $('form#lionfish-post-form')[0].reset();
+                     initialize();
                  }
                 },
             fail: function(res) {

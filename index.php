@@ -26,6 +26,27 @@ require_once( LIONFISH_PLUGINPATH . 'lib/required_plugins.php' );
 require_once( LIONFISH_PLUGINPATH . 'lib/custom-post-type.php' );
 require_once( LIONFISH_PLUGINPATH . 'lib/shortcode.php' );
 
+function delete_posts() {
+    $args = array (
+        'post_type' => 'lionfish_locations', // post type
+        'nopaging' => true
+    );
+    $q = new WP_Query ($args);
+    while ($q->have_posts()) {
+        $q->the_post();
+        $id = get_the_ID();
+        $posted_time = human_time_diff(get_the_time('U'), current_time ('timestamp'));
+        $posted = filter_var($posted_time, FILTER_SANITIZE_NUMBER_INT); // remove 'days' from posted_time
+        if($posted >= 360 ) {  // days to delete posts after published
+            wp_delete_post($id, true);
+        }
+    }
+    wp_reset_postdata ();
+}
+
+add_action( 'init', 'delete_posts' );
+
+
 function lionfish_location_scripts() {
     $q = new WP_Query(
         array('posts_per_page' => -1, 'post_type' => 'lionfish_locations', 'order'=> 'ASC')

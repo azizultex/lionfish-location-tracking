@@ -1,3 +1,61 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+#map {
+    height: 100%;
+}
+.controls {
+    margin-top: 10px;
+    border: 1px solid transparent;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 32px;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#pac-input {
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 12px;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 300px;
+}
+#pac-input::-moz-placeholder,
+#pac-input::-webkit-input-placeholder,
+#pac-input:-ms-input-placeholder {
+    font-weight: 300;
+}
+
+#pac-input:focus {
+    border-color: #4d90fe;
+}
+
+.pac-container {
+    font-family: Roboto;
+}
+
+#type-selector {
+    color: #fff;
+    background-color: #4d90fe;
+    padding: 5px 11px 0px 11px;
+}
+
+#type-selector label {
+    font-family: Roboto;
+    font-size: 13px;
+    font-weight: 300;
+}
+#target {
+    width: 345px;
+}
+
 #map-container {
     padding: 6px;
     border-width: 1px;
@@ -26,6 +84,13 @@ div#filter {
     position: absolute;
     top: 15px;
     right: 15px;
+}
+
+#firstHeading {
+    margin: 5px 0;
+}
+#bodyContent p {
+    margin: 0;
 }
 
 .login_form.modal {
@@ -71,3 +136,4 @@ div#filter {
     /* clear: both; */
     display: inline-block;
 }
+

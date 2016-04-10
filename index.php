@@ -48,8 +48,10 @@ function lionfish_location_scripts() {
 
             if ( $terms && ! is_wp_error( $terms ) ) {
                 $terms_ids = array();
+                $terms_names = array();
                 foreach ( $terms as $term ) {
                     $terms_ids[] = $term->term_id;
+                    $terms_names[] = $term->name;
                 }
             }
 
@@ -60,7 +62,8 @@ function lionfish_location_scripts() {
             $single_data['long'] = $long;
             $single_data['lionfish_number'] = $lionfish_number;
             $single_data['date'] = $date;
-            $single_data['layers'] = $terms_ids;
+            $single_data['layers_id'] = $terms_ids;
+            $single_data['layers_name'] = $terms_names;
 
             $post_data[] = $single_data;
 
@@ -73,7 +76,7 @@ function lionfish_location_scripts() {
     wp_enqueue_style('jquerymodal', LIONFISH_PLUGINURL . 'assets/css/jquery.modal.css');
     wp_enqueue_style('lionfish_style', LIONFISH_PLUGINURL . 'assets/css/lionfish_styles.css');
     wp_enqueue_script('jquerymodal', LIONFISH_PLUGINURL . 'assets/js/jquery.modal.js', array('jquery') );
-    wp_enqueue_script('gmap_api', 'https://maps.googleapis.com/maps/api/js', array('jquery') );
+    wp_enqueue_script('gmap_api', 'https://maps.googleapis.com/maps/api/js?sensor=true&libraries=places', array('jquery') );
     wp_enqueue_script('gmap_cluster', LIONFISH_PLUGINURL . 'assets/js/gmap/markerclusterer.js', array('jquery') );
     wp_enqueue_script('gmap_setting', LIONFISH_PLUGINURL . 'assets/js/gmap/setting.js', array('jquery') );
     wp_localize_script( 'gmap_setting', 'lionfish_locations', $post_data );

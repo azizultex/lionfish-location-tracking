@@ -12,10 +12,12 @@ function lionfish_custom_post_form($atts) {
     <a href="#jQuerymodal" rel="modal:open" class="btn lionfish-btn">Add new location</a>
 
     <div id="map-container">
+        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
         <div id="map" style="width:<?php echo $width; ?>;height: <?php echo $height; ?>"></div>
         <div id="filter">
             <?php
             wp_dropdown_categories( array(
+                'show_option_all' => 'Show all',
                 'taxonomy'      => 'lionfish_layers',
                 'hide_empty'    => 0,
                 'orderby'       => 'name',

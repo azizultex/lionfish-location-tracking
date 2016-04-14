@@ -1,73 +1,77 @@
 (function($){
 
-  var markerClusterer = null;
-  var map = null;
-  var imageUrl = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&' +
-      'chco=FFFFFF,008CFF,000000&ext=.png';
-
-  var selected_layer_id = 0, current_lat, current_long;
-
-//Set geo location lat and long
-  navigator.geolocation.getCurrentPosition(function (position, html5Error) {
-    geo_loc = processGeolocationResult(position);
-    currLatLong = geo_loc.split(",");
-    initializeCurrent(currLatLong[0], currLatLong[1]);
-  });
-
-//Get geo location result
-  function processGeolocationResult(position) {
-    html5Lat = position.coords.latitude; //Get latitude
-    html5Lon = position.coords.longitude; //Get longitude
-    html5TimeStamp = position.timestamp; //Get timestamp
-    html5Accuracy = position.coords.accuracy; //Get accuracy in meters
-    return (html5Lat).toFixed(8) + ", " + (html5Lon).toFixed(8);
-  }
-
-//Check value is present or
-  function initializeCurrent(latcurr, longcurr) {
-    if (latcurr != '' && longcurr != '') {
-      current_lat = latcurr;
-      current_long = longcurr;
-    } else {
-      current_lat = 39.91;
-      current_long = 116.38;
-    }
-  }
-
-  console.log(current_lat + ' ' +  current_long);
+  var spotted_markers = null,
+      removed_markers = null,
+      map = null,
+      selected_layer_id = 0;
 
   function refreshMap() {
 
-    if (markerClusterer) {
-      markerClusterer.clearMarkers();
+    // clear all markers
+    if (spotted_markers) {
+      spotted_markers.clearMarkers();
     }
 
-    var markers = [];
+    if (removed_markers) {
+      removed_markers.clearMarkers();
+    }
 
-    var markerImage = new google.maps.MarkerImage(imageUrl, new google.maps.Size(24, 32));
+    // locate to users location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        map.setCenter(initialLocation);
+      });
+    }
 
+    // create markers
+    var markers_spotted = [];
+    var markers_removed = [];
+
+    var markerImage = new google.maps.MarkerImage( ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png', new google.maps.Size(24, 32));
     var data_length = lionfish_locations.length; // get data from wp_localize_script()
-
     for (var i = 0; i < data_length; i++) {
-
       var latLng = new google.maps.LatLng(lionfish_locations[i].lat,
           lionfish_locations[i].long);
-      var layers_id = lionfish_locations[i].layers_id[0]
-      var marker = new google.maps.Marker({
-        position: latLng,
-        draggable: true,
-        title: lionfish_locations[i].location,
-        icon: markerImage
-      });
+      var layers_id = lionfish_locations[i].layers_id[0];
+      var location_type = lionfish_locations[i].location_type;
 
-      // create an array of markers
-      if( selected_layer_id == 0  ) {
-        markers.push(marker);
-      } else {
-        if(layers_id == selected_layer_id ) {
-          markers.push(marker);
+      if(location_type == 'spotted') {
+        var marker = new google.maps.Marker({
+          position: latLng,
+          draggable: true,
+          title: lionfish_locations[i].location,
+          icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+        });
+
+        // create an array of markers
+        if( selected_layer_id == 0  ) {
+          markers_spotted.push(marker);
+        } else {
+          if(layers_id == selected_layer_id ) {
+            markers_spotted.push(marker);
+          }
+        }
+
+      } else if ( location_type == 'removed' ) {
+
+        var marker = new google.maps.Marker({
+          position: latLng,
+          draggable: true,
+          title: lionfish_locations[i].location,
+          icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+        });
+
+        // create an array of markers
+        if( selected_layer_id == 0  ) {
+          markers_removed.push(marker);
+        } else {
+          if(layers_id == selected_layer_id ) {
+            markers_removed.push(marker);
+          }
         }
       }
+
 
       // add infowindow
       infowindow = new google.maps.InfoWindow();
@@ -81,6 +85,9 @@
               '<div id="bodyContent">'+
               '<p><b>Lat: </b>' + lionfish_locations[i].lat + '</p>' +
               '<p><b>Long: </b>' + lionfish_locations[i].long + '</p>' +
+              '<p><b>Time: </b>' + lionfish_locations[i].time + '</p>' +
+              '<p><b>date: </b>' + lionfish_locations[i].date + '</p>' +
+              '<p><b>Depth in metres: </b>' + lionfish_locations[i].depth + '</p>' +
               '<p><b>Layers: </b>' + lionfish_locations[i].layers_name[0] + '</p>' +
               '<p><b>Fish Number: </b>' + lionfish_locations[i].lionfish_number + '</p>' +
               '</div>'+
@@ -91,32 +98,41 @@
 
     }
 
-    // add clusters
-    markerClusterer = new MarkerClusterer(map, markers, {
-      zoom: 10,
-      maxZoom: 17,
-      minZoom: 4,
-      gridSize: 150
+    // Add marker clustering with default styles
+    var spotted_markers = new MarkerClusterer(map, markers_spotted);
+
+// Custom styles
+    var removed_markers = new MarkerClusterer(map, markers_removed, {
+      styles:[
+        {
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
+          height: 55,
+          width: 55,
+          opt_anchor: [16, 0],
+          opt_textColor: '#FFFFFF'
+        },
+        {
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
+          height: 54,
+          width: 55,
+          opt_anchor: [16, 0],
+          opt_textColor: '#FFFFFF'
+        },
+        {
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
+          height: 54,
+          width: 55,
+          opt_anchor: [16, 0],
+          opt_textColor: '#FFFFFF'
+        }
+      ]
     });
+
 
   }
 
-  function initialize() {
-
-    map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 1,
-      center: new google.maps.LatLng(39.91, 116.38),
-      mapTypeId: google.maps.MapTypeId.SATELLITE
-    });
-
-    $('#filter #lionfish_layers').on('change', function(){
-      selected_layer_id = $(this).val();
-      console.log(selected_layer_id);
-      refreshMap();
-    });
-
-    refreshMap();
-
+  // create search box
+  function searchBox() {
     // Create the search box and link it to the UI element.
     var input = document.getElementById('pac-input');
     var searchBox = new google.maps.places.SearchBox(input);
@@ -171,9 +187,65 @@
       });
       map.fitBounds(bounds);
     });
+  }
+
+  // initialize the map
+  function initialize() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(39.91, 116.38),
+      mapTypeId: google.maps.MapTypeId.HYBRID,
+      disableDefaultUI: false
+    });
+
+    refreshMap();
+    searchBox();
+
+    $('#filter #lionfish_layers').on('change', function(){
+      selected_layer_id = $(this).val();
+      refreshMap();
+    });
+
+    // get lat long on click map
+    var getlatlong;
+    function placeMarker(location) {
+      if (getlatlong) {
+        //if marker already was created change positon
+        getlatlong.setPosition(location);
+      } else {
+        //create a marker
+        getlatlong = new google.maps.Marker({
+          position: location,
+          map: map,
+          draggable: true,
+          icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker2.png'
+        });
+      }
+    }
+
+    google.maps.event.addListener(map, "click", function(event) {
+      var latitude = event.latLng.lat();
+      var longitude = event.latLng.lng();
+
+      placeMarker(event.latLng);
+
+      infowindow.setContent(
+          '<div class="show-latlong">' +
+          '<label>Latitude: </label><input type="text" name="lat" value="' + latitude + '">' +
+          '<label>Longitude: </label><input type="text" name="long" value="' + longitude + '">' +
+          '</div>'
+      );
+      infowindow.open(map, getlatlong);
+
+      // Center of map
+      map.panTo(new google.maps.LatLng(latitude,longitude));
+
+    }); //end addListener
+
 
   }
 
+  // load map
   google.maps.event.addDomListener(window, 'load', initialize);
 
 })(jQuery);

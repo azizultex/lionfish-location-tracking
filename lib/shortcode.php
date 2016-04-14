@@ -33,17 +33,27 @@ function lionfish_custom_post_form($atts) {
     <?php if(is_user_logged_in()) : ?>
 
         <div class="lionfish">
-            <p class="status"></p>
+            <p class="status" style="display: none"></p>
             <form id="lionfish-post-form" action="">
 
-                <label for="location">Location:</label>
+                <label for="location_type">Location type:</label>
+                <input type="radio" name="location_type" value="spotted"> Spotted
+                <input type="radio" name="location_type" value="removed"> Removed <br/>
+
+                <label for="location">Location name:</label>
                 <input type="text" name="location" id="location">
 
-                <label for="lat">Lat:</label>
+                <label for="lat">Latitude:</label>
                 <input type="text" name="lat" id="lat">
 
-                <label for="long">long:</label>
+                <label for="long">Longitude:</label>
                 <input type="text" name="long" id="long">
+
+                <label for="long">Time:</label>
+                <input type="time" name="time" id="time">
+
+                <label for="dat">Date:</label>
+                <input type="date" name="date" id="date">
 
                 <label for="lat">Layer:</label>
                 <?php
@@ -56,11 +66,12 @@ function lionfish_custom_post_form($atts) {
                 ) );
                 ?>
 
+                <label for="dat">Depth in metres:</label>
+                <input type="number" name="depth" id="depth">
+
                 <label for="number">Number of Lionfish:</label>
                 <input type="number" name="fish_number" id="fish_number">
 
-                <label for="dat">Date:</label>
-                <input type="date" name="date" id="date"> <br/>
 
                 <input type="submit" name="submit" value="Post location" class="submit-button">
             </form>

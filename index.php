@@ -9,6 +9,10 @@ Version: 1.0
 Description: LionFish Location Tracking plugin for lionfish.co
 */
 
+// Is ABSPATH defined?
+if ( !defined('ABSPATH') )
+    die('-1');
+
 /*
  * Useful constants
  */
@@ -45,6 +49,7 @@ function delete_posts() {
 }
 
 add_action( 'init', 'delete_posts' );
+add_filter('show_admin_bar', '__return_false');
 
 
 function lionfish_location_scripts() {
@@ -59,11 +64,14 @@ function lionfish_location_scripts() {
 
             $q->the_post();
 
+            $location_type      = get_post_meta( get_the_ID(), 'location_type', true );
             $location           = get_post_meta( get_the_ID(), 'location', true );
             $lat                = get_post_meta( get_the_ID(), 'lat', true );
             $long               = get_post_meta( get_the_ID(), 'long', true );
-            $lionfish_number    = get_post_meta( get_the_ID(), 'lionfish_number', true );
+            $time               = get_post_meta( get_the_ID(), 'time', true );
             $date               = get_post_meta( get_the_ID(), 'date', true );
+            $depth              = get_post_meta( get_the_ID(), 'depth', true );
+            $lionfish_number    = get_post_meta( get_the_ID(), 'lionfish_number', true );
             // tax
             $terms              = get_the_terms( get_the_ID(), 'lionfish_layers');
 
@@ -78,13 +86,16 @@ function lionfish_location_scripts() {
 
 
             $single_data = array();
+            $single_data['location_type'] = $location_type;
             $single_data['location'] = $location;
             $single_data['lat'] = $lat;
             $single_data['long'] = $long;
-            $single_data['lionfish_number'] = $lionfish_number;
+            $single_data['time'] = $time;
             $single_data['date'] = $date;
             $single_data['layers_id'] = $terms_ids;
             $single_data['layers_name'] = $terms_names;
+            $single_data['depth'] = $depth;
+            $single_data['lionfish_number'] = $lionfish_number;
 
             $post_data[] = $single_data;
 
@@ -103,6 +114,7 @@ function lionfish_location_scripts() {
     wp_localize_script( 'gmap_setting', 'lionfish_locations', $post_data );
     wp_enqueue_script('ajax_js', LIONFISH_PLUGINURL . 'assets/js/ajax-post-submit.js', array('jquery') );
     wp_localize_script( 'ajax_js', 'ajax_post_obj', array(
+        'LIONFISH_PLUGINURL' => LIONFISH_PLUGINURL,
         'ajaxurl' => admin_url( 'admin-ajax.php' )
     ));
 }
@@ -119,13 +131,16 @@ function ajax_location(){
 
     $notice = '';
 
+    $location_type  = $_POST['location_type'];
     $location       = $_POST['location'];
     $lat            = $_POST['lat'];
     $long           = $_POST['long'];
-    $fish_number    = $_POST['fish_number'];
+    $time           = $_POST['time'];
     $date           = $_POST['date'];
     $lionfish_layers = $_POST['lionfish_layers'];
     $term = get_term( $lionfish_layers, 'lionfish_layers' );
+    $depth          = $_POST['depth'];
+    $fish_number    = $_POST['fish_number'];
 
     $post_info = array(
         'post_type' => 'lionfish_locations',
@@ -133,19 +148,24 @@ function ajax_location(){
         'comment_status' => 'closed',
         'ping_status' => 'closed',
     );
-
-    if ( empty($location) ) {
+    if ( !isset($location_type)) {
+        $notice = 'Please select a location type';
+    } else if ( empty($location) ) {
         $notice = 'Please insert a location';
     } else if ( empty($lat) ) {
         $notice = 'Lat value required';
     } else if ( empty($long) ) {
         $notice = 'Long value required';
+    }  else if ( empty($time)) {
+        $notice = 'Time is required';
+    } else if ( empty($date)) {
+        $notice = 'Date is also required';
+    } else if ( empty($depth)) {
+        $notice = 'Depth is required in metres';
     } else if ( empty($fish_number) ) {
         $notice = 'Fish number value required';
     } else if ( is_nan($fish_number) ) {
         $notice = 'Numeric fish value required';
-    } else if ( empty($date)) {
-        $notice = 'Date is also required';
     } else {
         $post_id = wp_insert_post($post_info);
         $notice = 'Location submitted successfully!';
@@ -153,11 +173,14 @@ function ajax_location(){
 
     if ($post_id) {
         /* submit posts meta */
+        add_post_meta($post_id, 'location_type', $location_type);
         add_post_meta($post_id, 'location', $location);
         add_post_meta($post_id, 'lat', $lat);
         add_post_meta($post_id, 'long', $long);
-        add_post_meta($post_id, 'lionfish_number', $fish_number);
+        add_post_meta($post_id, 'time', $time);
         add_post_meta($post_id, 'date', $date);
+        add_post_meta($post_id, 'depth', $depth);
+        add_post_meta($post_id, 'lionfish_number', $fish_number);
 
         /* submit posts taxonomy */
         wp_set_object_terms( $post_id, $term->name, 'lionfish_layers' );

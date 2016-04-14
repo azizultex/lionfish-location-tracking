@@ -114,6 +114,7 @@ function my_edit_lionfish_locations_columns( $columns ) {
     $columns = array(
         'cb' => '<input type="checkbox" />',
         'title' => __( 'Title', 'lionfish' ),
+        'type' => __( 'Type', 'lionfish' ),
         'location' => __( 'Location', 'lionfish' ),
         'lat' => __( 'Lat', 'lionfish' ),
         'long' => __( 'Long', 'lionfish' ),
@@ -137,6 +138,11 @@ function lionfish_locations_columns($column, $post_id)
     {
         case 'title':
             $location = get_post_meta( get_the_ID(), 'location', true);
+            echo $location;
+            break;
+
+        case 'type':
+            $location = get_post_meta( get_the_ID(), 'location_type', true);
             echo $location;
             break;
 

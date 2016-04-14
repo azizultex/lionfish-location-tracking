@@ -16,7 +16,19 @@ html, body {
     outline: none;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
-
+.gmnoprint img { max-width: none; }
+img {
+    max-width: 100%;
+}
+.show-latlong {
+    max-width: 150px;
+}
+.show-latlong input {
+    padding: 2px 3px !important;
+    font-size: 13px;
+    font-weight: lighter;
+    font-family: inherit;
+}
 #pac-input {
     background-color: #fff;
     font-family: Roboto;
@@ -32,7 +44,6 @@ html, body {
 #pac-input:-ms-input-placeholder {
     font-weight: 300;
 }
-
 #pac-input:focus {
     border-color: #4d90fe;
 }
@@ -66,6 +77,9 @@ html, body {
     box-shadow: rgba(64, 64, 64, 0.1) 0 2px 5px;
     width: 800px;
 }
+p.status {
+    margin: 0;
+}
 #actions {
     list-style: none;
     padding: 0;
@@ -88,6 +102,7 @@ div#filter {
 
 #firstHeading {
     margin: 5px 0;
+    font-size: 16px;
 }
 #bodyContent p {
     margin: 0;
@@ -96,6 +111,7 @@ div#filter {
 .login_form.modal {
     border-radius: 0;
     line-height: 18px;
+    font-size: 12px;
     padding: 0;
     font-family: "Lucida Grande", Verdana, sans-serif;
 }
@@ -113,8 +129,9 @@ div#filter {
     padding: 20px;
 }
 .lionfish label {
-    margin: 10px 0;
+    margin: 5px 0;
     display: block;
+    font-size: 14px;
 }
 .lionfish input {
     padding: 5px !important;

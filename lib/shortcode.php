@@ -14,18 +14,6 @@ function lionfish_custom_post_form($atts) {
     <div id="map-container">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box">
         <div id="map" style="width:<?php echo $width; ?>;height: <?php echo $height; ?>"></div>
-        <div id="filter">
-            <?php
-            wp_dropdown_categories( array(
-                'show_option_all' => 'Show all',
-                'taxonomy'      => 'lionfish_layers',
-                'hide_empty'    => 0,
-                'orderby'       => 'name',
-                'order'         => 'ASC',
-                'name'          => 'lionfish_layers',
-            ) );
-            ?>
-        </div>
     </div>
 
 <div id="jQuerymodal" class="login_form modal" style="display:none">

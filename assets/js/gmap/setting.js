@@ -45,13 +45,7 @@
         });
 
         // create an array of markers
-        if( selected_layer_id == 0  ) {
-          markers_spotted.push(marker);
-        } else {
-          if(layers_id == selected_layer_id ) {
-            markers_spotted.push(marker);
-          }
-        }
+        markers_spotted.push(marker);
 
       } else if ( location_type == 'removed' ) {
 
@@ -63,13 +57,8 @@
         });
 
         // create an array of markers
-        if( selected_layer_id == 0  ) {
-          markers_removed.push(marker);
-        } else {
-          if(layers_id == selected_layer_id ) {
-            markers_removed.push(marker);
-          }
-        }
+        markers_removed.push(marker);
+
       }
 
 
@@ -106,24 +95,21 @@
       styles:[
         {
           url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
+          height: 65,
+          width: 65,
+          opt_anchor: [16, 0]
+        },
+        {
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
+          height: 45,
+          width: 45,
+          opt_anchor: [24, 0]
+        },
+        {
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
           height: 55,
           width: 55,
-          opt_anchor: [16, 0],
-          opt_textColor: '#FFFFFF'
-        },
-        {
-          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
-          height: 54,
-          width: 55,
-          opt_anchor: [16, 0],
-          opt_textColor: '#FFFFFF'
-        },
-        {
-          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
-          height: 54,
-          width: 55,
-          opt_anchor: [16, 0],
-          opt_textColor: '#FFFFFF'
+          opt_anchor: [32, 0]
         }
       ]
     });
@@ -200,11 +186,6 @@
 
     refreshMap();
     searchBox();
-
-    $('#filter #lionfish_layers').on('change', function(){
-      selected_layer_id = $(this).val();
-      refreshMap();
-    });
 
     // get lat long on click map
     var getlatlong;

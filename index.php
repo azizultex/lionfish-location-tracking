@@ -42,7 +42,8 @@ function delete_posts() {
         $posted_time = human_time_diff(get_the_time('U'), current_time ('timestamp'));
         $posted = filter_var($posted_time, FILTER_SANITIZE_NUMBER_INT); // remove 'days' from posted_time
         if($posted >= 360 ) {  // days to delete posts after published
-            wp_delete_post($id, true);
+            $post = array( 'ID' => $id, 'post_status' => 'private' );
+            wp_update_post($post);
         }
     }
     wp_reset_postdata ();

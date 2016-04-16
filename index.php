@@ -30,9 +30,10 @@ require_once( LIONFISH_PLUGINPATH . 'lib/required_plugins.php' );
 require_once( LIONFISH_PLUGINPATH . 'lib/custom-post-type.php' );
 require_once( LIONFISH_PLUGINPATH . 'lib/shortcode.php' );
 
-function delete_posts() {
+function private_posts() {
     $args = array (
         'post_type' => 'lionfish_locations', // post type
+        'post_status' => 'publish',
         'nopaging' => true
     );
     $q = new WP_Query ($args);
@@ -41,7 +42,7 @@ function delete_posts() {
         $id = get_the_ID();
         $posted_time = human_time_diff(get_the_time('U'), current_time ('timestamp'));
         $posted = filter_var($posted_time, FILTER_SANITIZE_NUMBER_INT); // remove 'days' from posted_time
-        if($posted >= 360 ) {  // days to delete posts after published
+        if($posted >= 365 ) {  // days to delete posts after published
             $post = array( 'ID' => $id, 'post_status' => 'private' );
             wp_update_post($post);
         }
@@ -49,13 +50,13 @@ function delete_posts() {
     wp_reset_postdata ();
 }
 
-add_action( 'init', 'delete_posts' );
+add_action( 'init', 'private_posts' );
 add_filter('show_admin_bar', '__return_false');
 
 
 function lionfish_location_scripts() {
     $q = new WP_Query(
-        array('posts_per_page' => -1, 'post_type' => 'lionfish_locations', 'order'=> 'ASC')
+        array('posts_per_page' => -1, 'post_type' => 'lionfish_locations', 'post_status' => 'publish', 'order'=> 'ASC')
     );
 
     $post_data = array();
@@ -109,7 +110,7 @@ function lionfish_location_scripts() {
     wp_enqueue_style('jquerymodal', LIONFISH_PLUGINURL . 'assets/css/jquery.modal.css');
     wp_enqueue_style('lionfish_style', LIONFISH_PLUGINURL . 'assets/css/lionfish_styles.css');
     wp_enqueue_script('jquerymodal', LIONFISH_PLUGINURL . 'assets/js/jquery.modal.js', array('jquery') );
-    wp_enqueue_script('gmap_api', 'https://maps.googleapis.com/maps/api/js?sensor=true&libraries=places', array('jquery') );
+    wp_enqueue_script('gmap_api', 'https://maps.googleapis.com/maps/api/js?libraries=places&sensor=true', array('jquery') );
     wp_enqueue_script('gmap_cluster', LIONFISH_PLUGINURL . 'assets/js/gmap/markerclusterer.js', array('jquery') );
     wp_enqueue_script('gmap_setting', LIONFISH_PLUGINURL . 'assets/js/gmap/setting.js', array('jquery') );
     wp_localize_script( 'gmap_setting', 'lionfish_locations', $post_data );

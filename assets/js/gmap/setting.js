@@ -1,18 +1,17 @@
-(function($){
-
+jQuery(document).ready(function($){
   var spotted_markers = null,
       removed_markers = null,
-      map = null,
+      markerClusterer = null,
+      map,
+      marker = null,
       selected_layer_id = 0;
 
   function refreshMap() {
 
-    // clear all markers
-    if (spotted_markers) {
+    if(spotted_markers) {
       spotted_markers.clearMarkers();
     }
-
-    if (removed_markers) {
+    if(removed_markers) {
       removed_markers.clearMarkers();
     }
 
@@ -36,29 +35,65 @@
       var layers_id = lionfish_locations[i].layers_id[0];
       var location_type = lionfish_locations[i].location_type;
 
-      if(location_type == 'spotted') {
-        var marker = new google.maps.Marker({
-          position: latLng,
-          draggable: true,
-          title: lionfish_locations[i].location,
-          icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
-        });
 
-        // create an array of markers
-        markers_spotted.push(marker);
+      if( selected_layer_id == 0  ) {
 
-      } else if ( location_type == 'removed' ) {
+        if(location_type == 'spotted') {
+          marker = new google.maps.Marker({
+            position: latLng,
+            draggable: true,
+            title: lionfish_locations[i].location,
+            icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+          });
 
-        var marker = new google.maps.Marker({
-          position: latLng,
-          draggable: true,
-          title: lionfish_locations[i].location,
-          icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
-        });
+          // create an array of markers
+          markers_spotted.push(marker);
 
-        // create an array of markers
-        markers_removed.push(marker);
+        } else if ( location_type == 'removed' ) {
 
+          marker = new google.maps.Marker({
+            position: latLng,
+            draggable: true,
+            title: lionfish_locations[i].location,
+            icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+          });
+
+          // create an array of markers
+          markers_removed.push(marker);
+
+        }
+
+
+      } else {
+        if(layers_id == selected_layer_id ) {
+
+          if(location_type == 'spotted') {
+            marker = new google.maps.Marker({
+              position: latLng,
+              draggable: true,
+              title: lionfish_locations[i].location,
+              icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+            });
+
+            // create an array of markers
+            markers_spotted.push(marker);
+
+          } else if ( location_type == 'removed' ) {
+
+            marker = new google.maps.Marker({
+              position: latLng,
+              draggable: true,
+              title: lionfish_locations[i].location,
+              icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+            });
+
+            // create an array of markers
+            markers_removed.push(marker);
+
+          }
+
+
+        }
       }
 
 
@@ -88,10 +123,10 @@
     }
 
     // Add marker clustering with default styles
-    var spotted_markers = new MarkerClusterer(map, markers_spotted);
+    spotted_markers = new MarkerClusterer(map, markers_spotted);
 
 // Custom styles
-    var removed_markers = new MarkerClusterer(map, markers_removed, {
+    removed_markers = new MarkerClusterer(map, markers_removed, {
       styles:[
         {
           url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
@@ -187,6 +222,12 @@
     refreshMap();
     searchBox();
 
+    $('#filter #lionfish_layers').on('change', function(){
+      selected_layer_id = $(this).val();
+      refreshMap();
+    });
+
+
     // get lat long on click map
     var getlatlong;
     function placeMarker(location) {
@@ -228,5 +269,4 @@
 
   // load map
   google.maps.event.addDomListener(window, 'load', initialize);
-
-})(jQuery);
+});

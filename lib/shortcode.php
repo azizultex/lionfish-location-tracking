@@ -30,8 +30,6 @@ function lionfish_custom_post_form($atts) {
 
 <div id="jQuerymodal" class="login_form modal" style="display:none">
     <h3>New LionFish Location</h3>
-    <?php if(is_user_logged_in()) : ?>
-
         <div class="lionfish">
             <p class="status" style="display: none"></p>
             <form id="lionfish-post-form" action="">
@@ -76,10 +74,6 @@ function lionfish_custom_post_form($atts) {
                 <input type="submit" name="submit" value="Post location" class="submit-button">
             </form>
         </div>
-
-    <?php else: ?>
-        <p>Please <a href="<?php echo wp_login_url( get_permalink());  ?>">Login</a> to submit lionfish location </p>
-    <?php endif; ?>
 </div>
 
 <?php

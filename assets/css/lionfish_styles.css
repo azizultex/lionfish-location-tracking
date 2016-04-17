@@ -106,6 +106,7 @@ div#filter {
 }
 #bodyContent p {
     margin: 0;
+    padding: 0;
 }
 
 .login_form.modal {
@@ -153,4 +154,9 @@ div#filter {
     /* clear: both; */
     display: inline-block;
 }
-
+.show-latlong p {
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+    color: red;
+}

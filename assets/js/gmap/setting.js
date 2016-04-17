@@ -43,7 +43,7 @@ jQuery(document).ready(function($){
             position: latLng,
             draggable: true,
             title: lionfish_locations[i].location,
-            icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+            icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-green.png'
           });
 
           // create an array of markers
@@ -55,7 +55,7 @@ jQuery(document).ready(function($){
             position: latLng,
             draggable: true,
             title: lionfish_locations[i].location,
-            icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+            icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-red.png'
           });
 
           // create an array of markers
@@ -72,7 +72,7 @@ jQuery(document).ready(function($){
               position: latLng,
               draggable: true,
               title: lionfish_locations[i].location,
-              icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+              icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-green.png'
             });
 
             // create an array of markers
@@ -84,7 +84,7 @@ jQuery(document).ready(function($){
               position: latLng,
               draggable: true,
               title: lionfish_locations[i].location,
-              icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
+              icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-red.png'
             });
 
             // create an array of markers
@@ -122,29 +122,50 @@ jQuery(document).ready(function($){
 
     }
 
-    // Add marker clustering with default styles
-    spotted_markers = new MarkerClusterer(map, markers_spotted);
+    // cluster with green
+    spotted_markers = new MarkerClusterer(map, markers_spotted, {
+      styles:[
+        {
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/cluster-green.png',
+          height: 52,
+          width: 53,
+          anchor: [0, 0]
+        },
+        {
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/cluster-green.png',
+          height: 52,
+          width: 53,
+          anchor: [0, 0]
+        },
+        {
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/cluster-green.png',
+          height: 52,
+          width: 53,
+          anchor: [0, 0]
+        }
+      ]
+    });
 
-// Custom styles
+    // clusters with red
     removed_markers = new MarkerClusterer(map, markers_removed, {
       styles:[
         {
-          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
-          height: 65,
-          width: 65,
-          opt_anchor: [16, 0]
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/cluster-red.png',
+          height: 52,
+          width: 53,
+          anchor: [0, 0]
         },
         {
-          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
-          height: 45,
-          width: 45,
-          opt_anchor: [24, 0]
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/cluster-red.png',
+          height: 52,
+          width: 53,
+          anchor: [0, 0]
         },
         {
-          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/m3.png',
-          height: 55,
-          width: 55,
-          opt_anchor: [32, 0]
+          url: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/cluster-red.png',
+          height: 52,
+          width: 53,
+          anchor: [0, 0]
         }
       ]
     });
@@ -214,7 +235,7 @@ jQuery(document).ready(function($){
   function initialize() {
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 10,
-      center: new google.maps.LatLng(39.91, 116.38),
+      center: new google.maps.LatLng(18.372909, -64.697700),
       mapTypeId: google.maps.MapTypeId.HYBRID,
       disableDefaultUI: false
     });
@@ -240,7 +261,7 @@ jQuery(document).ready(function($){
           position: location,
           map: map,
           draggable: true,
-          icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker2.png'
+          icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker.png'
         });
       }
     }
@@ -249,10 +270,13 @@ jQuery(document).ready(function($){
       var latitude = event.latLng.lat();
       var longitude = event.latLng.lng();
 
+      $("input[name=lat]").val(latitude);
+      $("input[name=long]").val(longitude);
+
       placeMarker(event.latLng);
 
       infowindow.setContent(
-          '<div class="show-latlong">' +
+          '<div class="show-latlong"> <p> Values are added to the form </p> ' +
           '<label>Latitude: </label><input type="text" name="lat" value="' + latitude + '">' +
           '<label>Longitude: </label><input type="text" name="long" value="' + longitude + '">' +
           '</div>'

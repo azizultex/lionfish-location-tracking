@@ -105,7 +105,7 @@ jQuery(document).ready(function($){
               '<div id="content">'+
               '<div id="siteNotice">'+
               '</div>'+
-              '<h3 id="firstHeading" class="firstHeading">' + lionfish_locations[i].location + '</h3>'+
+              '<h3 id="firstHeading" class="firstHeading">' + lionfish_locations[i].location + ' (' + lionfish_locations[i].location_type + ')' + '</h3>'+
               '<div id="bodyContent">'+
               '<p><b>Lat: </b>' + lionfish_locations[i].lat + '</p>' +
               '<p><b>Long: </b>' + lionfish_locations[i].long + '</p>' +

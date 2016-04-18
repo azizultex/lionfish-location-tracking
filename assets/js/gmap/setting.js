@@ -3,8 +3,7 @@ jQuery(document).ready(function($){
       removed_markers = null,
       markerClusterer = null,
       map,
-      marker = null,
-      selected_layer_id = 0;
+      marker = null;
 
   function refreshMap() {
 
@@ -35,65 +34,29 @@ jQuery(document).ready(function($){
       var layers_id = lionfish_locations[i].layers_id[0];
       var location_type = lionfish_locations[i].location_type;
 
+      if(location_type == 'spotted') {
+        marker = new google.maps.Marker({
+          position: latLng,
+          draggable: true,
+          title: lionfish_locations[i].location,
+          icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-green.png'
+        });
 
-      if( selected_layer_id == 0  ) {
+        // create an array of markers
+        markers_spotted.push(marker);
 
-        if(location_type == 'spotted') {
-          marker = new google.maps.Marker({
-            position: latLng,
-            draggable: true,
-            title: lionfish_locations[i].location,
-            icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-green.png'
-          });
+      } else if ( location_type == 'removed' ) {
 
-          // create an array of markers
-          markers_spotted.push(marker);
+        marker = new google.maps.Marker({
+          position: latLng,
+          draggable: true,
+          title: lionfish_locations[i].location,
+          icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-red.png'
+        });
 
-        } else if ( location_type == 'removed' ) {
+        // create an array of markers
+        markers_removed.push(marker);
 
-          marker = new google.maps.Marker({
-            position: latLng,
-            draggable: true,
-            title: lionfish_locations[i].location,
-            icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-red.png'
-          });
-
-          // create an array of markers
-          markers_removed.push(marker);
-
-        }
-
-
-      } else {
-        if(layers_id == selected_layer_id ) {
-
-          if(location_type == 'spotted') {
-            marker = new google.maps.Marker({
-              position: latLng,
-              draggable: true,
-              title: lionfish_locations[i].location,
-              icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-green.png'
-            });
-
-            // create an array of markers
-            markers_spotted.push(marker);
-
-          } else if ( location_type == 'removed' ) {
-
-            marker = new google.maps.Marker({
-              position: latLng,
-              draggable: true,
-              title: lionfish_locations[i].location,
-              icon: ajax_post_obj.LIONFISH_PLUGINURL + 'assets/img/marker-red.png'
-            });
-
-            // create an array of markers
-            markers_removed.push(marker);
-
-          }
-
-
-        }
       }
 
 

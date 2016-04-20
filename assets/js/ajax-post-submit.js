@@ -13,7 +13,6 @@ jQuery(document).ready(function($) {
             'long': $('form#lionfish-post-form #long').val(),
             'time': $('form#lionfish-post-form #time').val(),
             'date': $('form#lionfish-post-form #date').val(),
-            'lionfish_layers': $('form#lionfish-post-form #lionfish_layers').val(),
             'depth': $('form#lionfish-post-form #depth').val(),
             'fish_number': $('form#lionfish-post-form #fish_number').val()
         };

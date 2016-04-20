@@ -59,52 +59,6 @@ if ( ! function_exists('lionfish_post_type') ) {
 
 }
 
-
-if ( ! function_exists( 'lionfish_layers' ) ) {
-
-// Register Custom Taxonomy
-    function lionfish_layers() {
-
-        $labels = array(
-            'name'                       => _x( 'Lionfish Layers', 'Taxonomy General Name', 'lionfish' ),
-            'singular_name'              => _x( 'Lionfish Layer', 'Taxonomy Singular Name', 'lionfish' ),
-            'menu_name'                  => __( 'Lionfish Layers', 'lionfish' ),
-            'all_items'                  => __( 'All layers', 'lionfish' ),
-            'parent_item'                => __( 'Parent layer', 'lionfish' ),
-            'parent_item_colon'          => __( 'Parent layer:', 'lionfish' ),
-            'new_item_name'              => __( 'New Layer Name', 'lionfish' ),
-            'add_new_item'               => __( 'Add New Layer', 'lionfish' ),
-            'edit_item'                  => __( 'Edit Layer', 'lionfish' ),
-            'update_item'                => __( 'Update Layer', 'lionfish' ),
-            'view_item'                  => __( 'View Layer', 'lionfish' ),
-            'separate_items_with_commas' => __( 'Separate Layers with commas', 'lionfish' ),
-            'add_or_remove_items'        => __( 'Add or remove layer', 'lionfish' ),
-            'choose_from_most_used'      => __( 'Choose from the most used', 'lionfish' ),
-            'popular_items'              => __( 'Popular Layers', 'lionfish' ),
-            'search_items'               => __( 'Search Layers', 'lionfish' ),
-            'not_found'                  => __( 'No LayerFound', 'lionfish' ),
-            'no_terms'                   => __( 'No layers', 'lionfish' ),
-            'items_list'                 => __( 'Layers list', 'lionfish' ),
-            'items_list_navigation'      => __( 'Layers list navigation', 'lionfish' ),
-        );
-        $args = array(
-            'labels'                     => $labels,
-            'hierarchical'               => true,
-            'public'                     => true,
-            'show_ui'                    => true,
-            'show_admin_column'          => true,
-            'show_in_nav_menus'          => true,
-            'show_tagcloud'              => true,
-            'show_in_rest'               => true,
-        );
-        register_taxonomy( 'lionfish_layers', array( 'lionfish_locations' ), $args );
-
-    }
-    add_action( 'init', 'lionfish_layers', 0 );
-
-}
-
-
 /* Photo column in portfolio List View */
 
 add_filter( 'manage_edit-lionfish_locations_columns', 'my_edit_lionfish_locations_columns' ) ;
@@ -118,7 +72,6 @@ function my_edit_lionfish_locations_columns( $columns ) {
         'location' => __( 'Location', 'lionfish' ),
         'lat' => __( 'Lat', 'lionfish' ),
         'long' => __( 'Long', 'lionfish' ),
-        'layers' => __( 'Layers', 'lionfish' ),
         'number' => __( 'Number of lionfish', 'lionfish' ),
         'seen_date' => __( 'Seen Date', 'lionfish' ),
         'date' => __( 'Post Date', 'lionfish' )
@@ -159,22 +112,6 @@ function lionfish_locations_columns($column, $post_id)
         case 'long':
             $long = get_post_meta( get_the_ID(), 'long', true);
             echo $long;
-            break;
-
-        case 'layers':
-
-            $terms = get_the_terms( $post_id, 'lionfish_layers' );
-            if ( $terms && ! is_wp_error( $terms ) )  {
-                $groups = array();
-                foreach ( $terms as $term ) {
-                    $groups[] = $term->name;
-                }
-                $groups = join( ", ", $groups );
-            } else {
-                $groups = __("No Group", 'fta');
-            }
-
-            echo $groups;
             break;
 
         case 'number':

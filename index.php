@@ -40,12 +40,21 @@ function private_posts() {
     while ($q->have_posts()) {
         $q->the_post();
         $id = get_the_ID();
+        $location_type = get_post_meta( get_the_ID(), 'location_type', true );
         $posted_time = human_time_diff(get_the_time('U'), current_time ('timestamp'));
         $posted = filter_var($posted_time, FILTER_SANITIZE_NUMBER_INT); // remove 'days' from posted_time
-        if($posted >= 365 ) {  // days to delete posts after published
-            $post = array( 'ID' => $id, 'post_status' => 'private' );
-            wp_update_post($post);
+        if($location_type == 'spotted' ) {
+            if($posted >= 30 ) {  // days to delete posts after published
+                $post = array( 'ID' => $id, 'post_status' => 'private' );
+                wp_update_post($post);
+            }
+        } else {
+            if($posted >= 365 ) {  // days to delete posts after published
+                $post = array( 'ID' => $id, 'post_status' => 'private' );
+                wp_update_post($post);
+            }
         }
+
     }
     wp_reset_postdata ();
 }
@@ -74,18 +83,6 @@ function lionfish_location_scripts() {
             $date               = get_post_meta( get_the_ID(), 'date', true );
             $depth              = get_post_meta( get_the_ID(), 'depth', true );
             $lionfish_number    = get_post_meta( get_the_ID(), 'lionfish_number', true );
-            // tax
-            $terms              = get_the_terms( get_the_ID(), 'lionfish_layers');
-
-            if ( $terms && ! is_wp_error( $terms ) ) {
-                $terms_ids = array();
-                $terms_names = array();
-                foreach ( $terms as $term ) {
-                    $terms_ids[] = $term->term_id;
-                    $terms_names[] = $term->name;
-                }
-            }
-
 
             $single_data = array();
             $single_data['location_type'] = $location_type;
@@ -94,8 +91,6 @@ function lionfish_location_scripts() {
             $single_data['long'] = $long;
             $single_data['time'] = $time;
             $single_data['date'] = $date;
-            $single_data['layers_id'] = $terms_ids;
-            $single_data['layers_name'] = $terms_names;
             $single_data['depth'] = $depth;
             $single_data['lionfish_number'] = $lionfish_number;
 
@@ -139,8 +134,6 @@ function ajax_location(){
     $long           = $_POST['long'];
     $time           = $_POST['time'];
     $date           = $_POST['date'];
-    $lionfish_layers = $_POST['lionfish_layers'];
-    $term = get_term( $lionfish_layers, 'lionfish_layers' );
     $depth          = $_POST['depth'];
     $fish_number    = $_POST['fish_number'];
 
@@ -152,8 +145,6 @@ function ajax_location(){
     );
     if ( !isset($location_type)) {
         $notice = 'Please select a location type';
-    } else if ( empty($location) ) {
-        $notice = 'Please insert a location';
     } else if ( empty($lat) ) {
         $notice = 'Lat value required';
     } else if ( empty($long) ) {
@@ -183,9 +174,6 @@ function ajax_location(){
         add_post_meta($post_id, 'date', $date);
         add_post_meta($post_id, 'depth', $depth);
         add_post_meta($post_id, 'lionfish_number', $fish_number);
-
-        /* submit posts taxonomy */
-        wp_set_object_terms( $post_id, $term->name, 'lionfish_layers' );
     }
 
     echo json_encode($notice);

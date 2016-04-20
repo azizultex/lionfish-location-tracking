@@ -31,7 +31,6 @@ jQuery(document).ready(function($){
     for (var i = 0; i < data_length; i++) {
       var latLng = new google.maps.LatLng(lionfish_locations[i].lat,
           lionfish_locations[i].long);
-      var layers_id = lionfish_locations[i].layers_id[0];
       var location_type = lionfish_locations[i].location_type;
 
       if(location_type == 'spotted') {
@@ -75,7 +74,6 @@ jQuery(document).ready(function($){
               '<p><b>Time: </b>' + lionfish_locations[i].time + '</p>' +
               '<p><b>date: </b>' + lionfish_locations[i].date + '</p>' +
               '<p><b>Depth in metres: </b>' + lionfish_locations[i].depth + '</p>' +
-              '<p><b>Layers: </b>' + lionfish_locations[i].layers_name[0] + '</p>' +
               '<p><b>Fish Number: </b>' + lionfish_locations[i].lionfish_number + '</p>' +
               '</div>'+
               '</div>');

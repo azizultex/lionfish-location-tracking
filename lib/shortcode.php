@@ -41,17 +41,6 @@ function lionfish_custom_post_form($atts) {
                 <label for="dat">Date:</label>
                 <input type="date" name="date" id="date">
 
-                <label for="lat">Layer:</label>
-                <?php
-                wp_dropdown_categories( array(
-                    'taxonomy'      => 'lionfish_layers',
-                    'hide_empty'    => 0,
-                    'orderby'       => 'name',
-                    'order'         => 'ASC',
-                    'name'          => 'lionfish_layers',
-                ) );
-                ?>
-
                 <label for="dat">Depth in metres:</label>
                 <input type="number" name="depth" id="depth">
 

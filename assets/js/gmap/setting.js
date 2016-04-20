@@ -3,6 +3,7 @@ jQuery(document).ready(function($){
       removed_markers = null,
       markerClusterer = null,
       map,
+      selected_layer,
       marker = null;
 
   function refreshMap() {
@@ -205,8 +206,16 @@ jQuery(document).ready(function($){
     searchBox();
 
     $('#filter #lionfish_layers').on('change', function(){
-      selected_layer_id = $(this).val();
-      refreshMap();
+      selected_layer = $(this).val();
+      if(selected_layer == 'spotted') {
+        refreshMap();
+        removed_markers.clearMarkers();
+      } else if (selected_layer == 'removed') {
+        refreshMap();
+        spotted_markers.clearMarkers();
+      } else {
+        refreshMap();
+      }
     });
 
 

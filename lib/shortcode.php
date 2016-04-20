@@ -14,6 +14,13 @@ function lionfish_custom_post_form($atts) {
     <div id="map-container">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box">
         <div id="map" style="width:<?php echo $width; ?>;height: <?php echo $height; ?>"></div>
+        <div id="filter">
+            <select id="lionfish_layers">
+                <option value="all">Show all</option>
+                <option value="spotted">Spotted</option>
+                <option value="removed">Removed</option>
+            </select>
+        </div>
     </div>
 
 <div id="jQuerymodal" class="login_form modal" style="display:none">

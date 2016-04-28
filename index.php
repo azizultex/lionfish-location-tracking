@@ -37,7 +37,7 @@ function private_posts() {
         'nopaging' => true
     );
     $q = new WP_Query ($args);
-    while ($q->have_posts()) {
+    while ($q->hav_eposts()) {
         $q->the_post();
         $id = get_the_ID();
         $location_type = get_post_meta( get_the_ID(), 'location_type', true );
@@ -104,9 +104,11 @@ function lionfish_location_scripts() {
     /* ajaxify the post submit */
     wp_enqueue_style('jquerymodal', LIONFISH_PLUGINURL . 'assets/css/jquery.modal.css');
     wp_enqueue_style('lionfish_style', LIONFISH_PLUGINURL . 'assets/css/lionfish_styles.css');
+    wp_enqueue_style('font-awesome', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css');
     wp_enqueue_script('jquerymodal', LIONFISH_PLUGINURL . 'assets/js/jquery.modal.js', array('jquery') );
     wp_enqueue_script('gmap_api', 'https://maps.googleapis.com/maps/api/js?libraries=places&sensor=true', array('jquery') );
-    wp_enqueue_script('gmap_cluster', LIONFISH_PLUGINURL . 'assets/js/gmap/markerclusterer.js', array('jquery') );
+    wp_enqueue_script('gmap_cluster', LIONFISH_PLUGINURL . 'assets/js/gmap/markerclusterer.js', array('jquery') );  
+   // wp_enqueue_script('sharer', '//cdn.jsdelivr.net/sharer.js/latest/sharer.min.js', array('jquery') );
     wp_enqueue_script('gmap_setting', LIONFISH_PLUGINURL . 'assets/js/gmap/setting.js', array('jquery') );
     wp_localize_script( 'gmap_setting', 'lionfish_locations', $post_data );
     wp_enqueue_script('ajax_js', LIONFISH_PLUGINURL . 'assets/js/ajax-post-submit.js', array('jquery') );

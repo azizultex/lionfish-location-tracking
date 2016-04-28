@@ -64,6 +64,8 @@ jQuery(document).ready(function($){
       infowindow = new google.maps.InfoWindow();
       google.maps.event.addListener(marker, 'click', (function(marker,i){
         return function(){
+          var title = encodeURIComponent('Lionfish location updated');
+          var url = 'http://lionfish.info/lionfish-tracking-map/';
           infowindow.setContent(
               '<div id="content">'+
               '<div id="siteNotice">'+
@@ -76,12 +78,28 @@ jQuery(document).ready(function($){
               '<p><b>date: </b>' + lionfish_locations[i].date + '</p>' +
               '<p><b>Depth in metres: </b>' + lionfish_locations[i].depth + '</p>' +
               '<p><b>Fish Number: </b>' + lionfish_locations[i].lionfish_number + '</p>' +
+              '<div class="lf-share">' + 
+                  '<ul>' +
+                      '<li>' +
+                        '<a href="http://www.facebook.com/share.php?u='+ url +'&title='+ title +'" target="_blank"><i class="fa fa-facebook"></i></a>' +
+                      '</li>' + 
+                      '<li>' +
+                        '<a href="https://twitter.com/share?url='+ url +'&text='+ title +'&hashtags=lionfish" target="_blank"><i class="fa fa-twitter"></i></a>' +
+                      '</li>' +
+                      '<li>' +
+                        '<a href="https://plus.google.com/share?url='+ url +'" target="_blank"><i class="fa fa-google-plus"></i></a>' +
+                      '</li>' +  
+                      '<li>' +
+                        '<a href="https://linkedin.com/shareArticle?url='+ url +'&title='+ title +'" target="_blank"><i class="fa fa-linkedin"></i></a>' +
+                      '</li>' +
+                  '</ul>' +
+              '</div>' +
               '</div>'+
               '</div>');
           infowindow.open(map,marker);
         }
       })(marker, i));
-
+    
     }
 
     // cluster with green

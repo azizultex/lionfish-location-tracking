@@ -43,5 +43,5 @@ jQuery(document).ready(function($) {
       $(this).modal();
       return false;
     });
-
+    
 });

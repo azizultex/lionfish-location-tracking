@@ -9,7 +9,7 @@ function lionfish_custom_post_form($atts) {
     ob_start();
 ?>
 
-    <a href="#jQuerymodal" rel="modal:open" class="btn lionfish-btn">Add new location</a>
+    <a href="#jQuerymodal" class="btn lionfish-btn" data-modal>Add new location</a>
 
     <div id="map-container">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box">

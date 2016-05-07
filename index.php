@@ -126,18 +126,21 @@ add_action( 'wp_enqueue_scripts', 'lionfish_location_scripts' );
 add_action( 'wp_ajax_ajaxlocation', 'ajax_location' );
 add_action( 'wp_ajax_nopriv_ajaxlocation', 'ajax_location' );
 
+
 function ajax_location(){
 
     $notice = '';
 
-    $location_type  = $_POST['location_type'];
-    $location       = $_POST['location'];
+    $location_type  = sanitize_text_field($_POST['location_type']);
+    $location       = sanitize_text_field($_POST['location']);
     $lat            = $_POST['lat'];
     $long           = $_POST['long'];
-    $time           = $_POST['time'];
-    $date           = $_POST['date'];
-    $depth          = $_POST['depth'];
-    $fish_number    = $_POST['fish_number'];
+    $time           = sanitize_text_field($_POST['time']);
+    $date           = sanitize_text_field($_POST['date']);
+    $depth          = intval($_POST['depth']);
+    $fish_number    = intval($_POST['fish_number']);
+
+
 
     $post_info = array(
         'post_type' => 'lionfish_locations',
@@ -145,7 +148,7 @@ function ajax_location(){
         'comment_status' => 'closed',
         'ping_status' => 'closed',
     );
-    if ( !isset($location_type)) {
+    if ( empty($location_type)) {
         $notice = 'Please select a location type';
     } else if ( empty($lat) ) {
         $notice = 'Lat value required';

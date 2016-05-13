@@ -22,13 +22,14 @@ define( 'LIONFISH_DOMAIN', "lionfish");
 define( 'LIONFISH_VERSION', "1.0");
 
 /* text domain */
-load_plugin_textdomain(LIONFISH_DOMAIN, LIONFISH_PLUGINPATH . 'lang' );
+//load_plugin_textdomain(LIONFISH_DOMAIN, LIONFISH_PLUGINPATH . 'lang' );
 
 /* required files */
 require_once( LIONFISH_PLUGINPATH . 'lib/class-tgm-plugin-activation.php' );
 require_once( LIONFISH_PLUGINPATH . 'lib/required_plugins.php' );
 require_once( LIONFISH_PLUGINPATH . 'lib/custom-post-type.php' );
 require_once( LIONFISH_PLUGINPATH . 'lib/shortcode.php' );
+
 
 function private_posts() {
     $args = array (
@@ -37,21 +38,22 @@ function private_posts() {
         'nopaging' => true
     );
     $q = new WP_Query ($args);
-    while ($q->hav_eposts()) {
+    while ($q->have_posts()) {
         $q->the_post();
         $id = get_the_ID();
         $location_type = get_post_meta( get_the_ID(), 'location_type', true );
         $posted_time = human_time_diff(get_the_time('U'), current_time ('timestamp'));
         $posted = filter_var($posted_time, FILTER_SANITIZE_NUMBER_INT); // remove 'days' from posted_time
+
         if($location_type == 'spotted' ) {
             if($posted >= 30 ) {  // days to delete posts after published
-                $post = array( 'ID' => $id, 'post_status' => 'private' );
-                wp_update_post($post);
+                $post_private = array( 'ID' => $id, 'post_status' => 'private' );
+                wp_update_post($post_private);
             }
         } else {
             if($posted >= 365 ) {  // days to delete posts after published
-                $post = array( 'ID' => $id, 'post_status' => 'private' );
-                wp_update_post($post);
+                $post_private = array( 'ID' => $id, 'post_status' => 'private' );
+                wp_update_post($post_private);
             }
         }
 
@@ -60,9 +62,32 @@ function private_posts() {
 }
 
 add_action( 'init', 'private_posts' );
-add_filter('show_admin_bar', '__return_false');
+//add_filter('show_admin_bar', '__return_false');
+
+// extend admin search
+add_filter('posts_join', 'segnalazioni_search_join' );
+function segnalazioni_search_join ($join){
+    global $pagenow, $wpdb;
+    if ( is_admin() && $pagenow=='edit.php' && $_GET['post_type']=='lionfish_locations' && $_GET['s'] != '') {    
+        $join .='LEFT JOIN '.$wpdb->postmeta. ' ON '. $wpdb->posts . '.ID = ' . $wpdb->postmeta . '.post_id ';
+    }
+    return $join;
+}
+
+add_filter( 'posts_where', 'segnalazioni_search_where' );
+function segnalazioni_search_where( $where ){
+    global $pagenow, $wpdb;
+    if ( is_admin() && $pagenow=='edit.php' && $_GET['post_type']=='lionfish_locations' && $_GET['s'] != '') {
+        $where = preg_replace(
+       "/\(\s*".$wpdb->posts.".post_title\s+LIKE\s*(\'[^\']+\')\s*\)/",
+       "(".$wpdb->posts.".post_title LIKE $1) OR (".$wpdb->postmeta.".meta_value LIKE $1)", $where );
+    }
+    return $where;
+}
 
 
+
+// load scripts
 function lionfish_location_scripts() {
     $q = new WP_Query(
         array('posts_per_page' => -1, 'post_type' => 'lionfish_locations', 'post_status' => 'publish', 'order'=> 'ASC')

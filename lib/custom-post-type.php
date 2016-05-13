@@ -73,7 +73,7 @@ function my_edit_lionfish_locations_columns( $columns ) {
         'lat' => __( 'Lat', 'lionfish' ),
         'long' => __( 'Long', 'lionfish' ),
         'number' => __( 'Number of lionfish', 'lionfish' ),
-        'seen_date' => __( 'Seen Date', 'lionfish' ),
+        'seen_date' => __( 'Seen/Removed Date', 'lionfish' ),
         'date' => __( 'Post Date', 'lionfish' )
     );
 

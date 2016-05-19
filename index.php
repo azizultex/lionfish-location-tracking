@@ -42,16 +42,16 @@ function private_posts() {
         $q->the_post();
         $id = get_the_ID();
         $location_type = get_post_meta( get_the_ID(), 'location_type', true );
-        $posted_time = human_time_diff(get_the_time('U'), current_time ('timestamp'));
-        $posted = filter_var($posted_time, FILTER_SANITIZE_NUMBER_INT); // remove 'days' from posted_time
+        $days = round((date('U') - get_the_time('U')) / (60*60*24)); // https://mor10.com/add-a-twitter-like-timestamp-to-your-wordpress-posts/
 
         if($location_type == 'spotted' ) {
-            if($posted >= 30 ) {  // days to delete posts after published
+            if($days >= 30 ) {  // days to delete posts after published
                 $post_private = array( 'ID' => $id, 'post_status' => 'private' );
                 wp_update_post($post_private);
+
             }
         } else {
-            if($posted >= 365 ) {  // days to delete posts after published
+            if($days >= 365 ) {  // days to delete posts after published
                 $post_private = array( 'ID' => $id, 'post_status' => 'private' );
                 wp_update_post($post_private);
             }
